@@ -1,5 +1,36 @@
-<div ng-repeat="player in players ">
-   <a href="/players/{{player._id}}">{{player.name}}</a> - {{player.rating}}
+<div class="table-responsive">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>name</th>
+        <th>goals</th>
+        <th>assists</th>
+        <th>totalPasses</th>
+        <th>accuratePasses</th>
+        <th>keyPasses</th>
+        <th>dribbles</th>
+        <th>totalThroughBalls</th>
+        <th>accurateThroughBalls</th>
+        <th>teamName</th>
+        <th>rating</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="player in players | orderBy: '-rating'">
+      <td><a href="/players/{{player._id}}">{{player.name}}</a></td>
+      <td>{{player.goals}}</td>
+      <td>{{player.assists}}</td>
+      <td>{{player.totalPasses}}</td>
+      <td>{{player.accuratePasses}}</td>
+      <td>{{player.keyPasses}}</td>
+      <td>{{player.dribbles}}</td>
+      <td>{{player.totalThroughBalls}}</td>
+      <td>{{player.accurateThroughBalls}}</td>
+      <td>{{player.teamName}}</td>
+      <td>{{player.rating}}</td>
+      </tr>
+    </tbody>
+  </table>
 </div>
 
 <form ng-submit="addPlayer()">
