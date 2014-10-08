@@ -32,14 +32,18 @@
     </tbody>
   </table>
 </div>
-<div class='chart'>
-  <div>{{player.id}}</div>
-  <div>{{player.goals}}</div>
-  <div>{{player.assists}}</div>
-  <div>{{player.totalPasses}}</div>
-  <div>{{player.accuratePasses}}</div>
-  <div>{{player.keyPasses}}</div>
-  <div>{{player.dribbles}}</div>
-  <div>{{player.totalThroughBalls}}</div>
-  <div>{{player.accurateThroughBalls}}</div>
-</div>
+<!-- <div class='chart'>
+  <div class='bar' bar-graph point='{{player.id}}'>{{player.id}}</div>
+  <div class='bar' bar-graph point='{{player.goals}}'>{{player.goals}}</div>
+  <div class='bar' bar-graph point='{{player.assists}}'>{{player.assists}}</div>
+  <div class='bar' bar-graph point='{{player.totalPasses}}'>{{player.totalPasses}}</div>
+  <div class='bar' bar-graph point='{{player.accuratePasses}}'>{{player.accuratePasses}}</div>
+  <div class='bar' bar-graph point='{{player.keyPasses}}'>{{player.keyPasses}}</div>
+  <div class='bar' bar-graph point='{{player.dribbles}}'>{{player.dribbles}}</div>
+  <div class='bar' bar-graph point='{{player.totalThroughBalls}}'>{{player.totalThroughBalls}}</div>
+  <div class='bar' data-point='{{player.accurateThroughBalls}}'>{{player.accurateThroughBalls}}</div>
+</div> -->
+<svg width="720" height="720">
+  <circle r="360" cx="360" cy="360" class="backgroundCircle">
+  <circle stat-point>
+</svg>
