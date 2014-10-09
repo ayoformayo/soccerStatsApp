@@ -7,13 +7,11 @@ angular.module('soccerApp')
     ddo.fetch = function(){
       // return [{"name": "Alessandro Del Piero", "rating": "10"}];
       return $http.get('/api/players').success(function(data){
-        console.log(data)
         angular.copy(data, ddo.players);
       })
     };
 
     ddo.create = function(player){
-      console.log('create')
       return $http.post('/api/players', player).success(function(data){
         ddo.players.push(data)
       });
@@ -21,7 +19,6 @@ angular.module('soccerApp')
 
     ddo.get = function(id){
       return $http.get('/api/players/' + id).then(function(res){
-        console.log(res.data)
         return res.data;
       });
     }
