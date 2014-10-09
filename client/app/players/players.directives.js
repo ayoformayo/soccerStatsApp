@@ -112,7 +112,7 @@ angular.module('soccerApp')
 
         this.drawDataline = function(context, hash){
           // context.beginPath();
-          // context.lineWidth = 5;
+          // context.lineWidth = 1;
           // context.strokeStyle = '#003300';
           // context.moveTo(360, 360);
           // context.lineTo(hash.x, hash.y);
@@ -122,7 +122,7 @@ angular.module('soccerApp')
 
         this.drawConnectors = function(context, hash){
           context.beginPath();
-          context.lineWidth = 5;
+          context.lineWidth = 1;
           context.strokeStyle = '#003300';
           context.moveTo(hash.old_x, hash.old_y);
           context.lineTo(hash.x, hash.y);
@@ -164,6 +164,27 @@ angular.module('soccerApp')
           })
         }
 
+        this.setAttrs = function(circleEnter, hash){
+          var that = this;
+          circleEnter.attr(hash.y, function( d, i ){
+            var coord = that.getAngle(d,i, hash.radianAngle)
+            return coord.y + 360;
+          });
+
+          circleEnter.attr(hash.x, function(d, i) {
+            var coord = that.getAngle(d,i, hash.radianAngle)
+            return coord.x + 360;
+          });
+
+          circleEnter.attr('data-stat-value', function( d, i ){
+            return d.val;
+          });
+
+          circleEnter.attr('data-stat-attribute', function(d, i){
+            return d.attribute;
+          });
+        };
+
         this.drawCanvasStyle = function(attrs){
           var d3 = $window.d3;
           var base = d3.select('stat-canvas');
@@ -184,33 +205,54 @@ angular.module('soccerApp')
 
           var circleEnter = circle.enter().append('data-circle');
 
-
-          circleEnter.attr('y', function( d, i ){
-            var coord = that.getAngle(d,i, radianAngle)
-            return coord.y + 360;
-          });
-
-          circleEnter.attr('x', function(d, i) {
-            var coord = that.getAngle(d,i, radianAngle)
-            return coord.x + 360;
-          });
-
-          circleEnter.attr('data-stat-value', function( d, i ){
-            return d.val;
-          });
-
-          circleEnter.attr('data-stat-attribute', function(d, i){
-            return d.attribute;
-          });
+          this.setAttrs(circleEnter, {x: 'x', y: 'y', radianAngle: radianAngle});
 
           this.drawCanvas(context, attrs);
 
         };
+
+        this.drawSvgStyle = function(attrs){
+          var d3 = $window.d3;
+          var base = d3.select('stat-canvas');
+          var that = this;
+          var svg = base.append('svg')
+            .attr("width", 720)
+            .attr("height", 720);
+          var grouping = svg.append('g').attr('id', 'nodes');
+          var attr_array = this.hasherizePlayer($scope.player);
+          var circle = grouping.selectAll('circle.node').data(attr_array);
+
+
+          var totalEntries = attr_array.length;
+          var radianAngle = 360 / totalEntries;
+          var circleEnter = circle.enter().append('circle').attr("class", "node");
+
+          circle.on('mouseover', function(){
+            console.log('mouse')
+          });
+
+          this.setAttrs(circleEnter, {x: 'cx', y: 'cy', radianAngle: radianAngle});
+
+          circleEnter.attr('r', function(d, i) {
+            return 5;
+          });
+
+          circleEnter.style('fill', function(d, i){
+            var letters = '0123456789ABCDEF'.split('');
+            var color = '#';
+            for (var i = 0; i < 6; i++ ) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+          })
+
+        }
       },
 
       link: function(scope, elem, attrs, ctrl){
 
         ctrl.drawCanvasStyle(attrs);
+        ctrl.drawSvgStyle(attrs)
 
       }
     };
