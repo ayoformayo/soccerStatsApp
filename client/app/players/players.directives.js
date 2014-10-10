@@ -257,8 +257,10 @@ angular.module('soccerApp')
               .text("a simple tooltip");
 
           // circle.on("mouseover", function(){return tooltip.style("visibility", "visible");})
-          circle.on("mousemove", function(){return tooltip.style("top",
-                  (d3.event.pageY-10)+"px").style("left",(d3.event.pageX+10)+"px");})
+          circle.on("mousemove", function(d, i){
+            console.log(d)
+            tooltip.text(d.attribute + ' - ' + d.val)
+            return tooltip.style("top", (d3.event.pageY-10)+"px").style("left",(d3.event.pageX+10)+"px");})
           // circle.on("mouseout", function(){return tooltip.style("visibility", "hidden");});
 
           circle.on('mouseover', function( d, i ){
