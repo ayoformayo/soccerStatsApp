@@ -249,18 +249,31 @@ angular.module('soccerApp')
 
           circleEnter.append("circle:title")
             .text(function(d) { return d.attribute; });
-          var tooltip = d3.select("body")
-              .append("div")
+
+          var tooltipPresent = $('.tooltipDiv').length > 0;
+          if(!tooltipPresent){
+            d3.select('.playerContainer').append('div')
+              .attr('class', 'tooltipDiv');
+          }
+          var tooltip = d3.select(".tooltipDiv")
               .style("position", "absolute")
               .style("z-index", "10")
-              // .style("visibility", "hidden")
+              .style("visibility", "hidden")
               .text("a simple tooltip");
 
           // circle.on("mouseover", function(){return tooltip.style("visibility", "visible");})
           circle.on("mousemove", function(d, i){
-            console.log(d)
             tooltip.text(d.attribute + ' - ' + d.val)
-            return tooltip.style("top", (d3.event.pageY-10)+"px").style("left",(d3.event.pageX+10)+"px");})
+            content = '<p class="main">' + d.attribute + '</span></p>'
+            content += '<hr class="tooltip-hr">'
+            content += '<p class="main">' + d.val + '</span></p>'
+            tooltip.html(content)
+            tooltip.style("visibility", "visible")
+            return tooltip.style("top", (d3.event.pageY-10)+"px").style("left",(d3.event.pageX+10)+"px");
+          })
+          circle.on('mouseout', function(d, i){
+            return tooltip.style("visibility", "hidden");
+          })
           // circle.on("mouseout", function(){return tooltip.style("visibility", "hidden");});
 
           circle.on('mouseover', function( d, i ){

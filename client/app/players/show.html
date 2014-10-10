@@ -1,50 +1,39 @@
-<a href="/players">back</a>
-{{player.name}}-{{player.rating}}
-<div class="table-responsive">
-  <table class="table">
-    <thead>
-      <tr>
-        <th>id</th>
-        <th>goals</th>
-        <th>assists</th>
-        <th>totalPasses</th>
-        <th>accuratePasses</th>
-        <th>keyPasses</th>
-        <th>dribbles</th>
-        <th>totalThroughBalls</th>
-        <th>accurateThroughBalls</th>
-        <th>teamName</th>
-        <th>name</th>
-      </tr>
-    </thead>
-    <tbody>
-      <td>{{player.id}}</td>
-      <td>{{player.goals}}</td>
-      <td>{{player.assists}}</td>
-      <td>{{player.totalPasses}}</td>
-      <td>{{player.accuratePasses}}</td>
-      <td>{{player.keyPasses}}</td>
-      <td>{{player.dribbles}}</td>
-      <td>{{player.totalThroughBalls}}</td>
-      <td>{{player.accurateThroughBalls}}</td>
-      <td>{{player.teamName}}</td>
-      <td>{{player.name}}</td>
-    </tbody>
-  </table>
-</div>
-<!-- <div class='chart'>
-  <div class='bar' bar-graph point='{{player.id}}'>{{player.id}}</div>
-  <div class='bar' bar-graph point='{{player.goals}}'>{{player.goals}}</div>
-  <div class='bar' bar-graph point='{{player.assists}}'>{{player.assists}}</div>
-  <div class='bar' bar-graph point='{{player.totalPasses}}'>{{player.totalPasses}}</div>
-  <div class='bar' bar-graph point='{{player.accuratePasses}}'>{{player.accuratePasses}}</div>
-  <div class='bar' bar-graph point='{{player.keyPasses}}'>{{player.keyPasses}}</div>
-  <div class='bar' bar-graph point='{{player.dribbles}}'>{{player.dribbles}}</div>
-  <div class='bar' bar-graph point='{{player.totalThroughBalls}}'>{{player.totalThroughBalls}}</div>
-  <div class='bar' data-point='{{player.accurateThroughBalls}}'>{{player.accurateThroughBalls}}</div>
-</div> -->
-<!-- <svg width="720" height="720">
-  <circle r="360" cx="360" cy="360" class="backgroundCircle">
-</svg> -->
+<div class='playerContainer'>
 
-<stat-canvas player='player'></stat-canvas>
+  <a href="/players">back</a>
+  {{player.name}}-{{player.rating}}
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>id</th>
+          <th>goals</th>
+          <th>assists</th>
+          <th>totalPasses</th>
+          <th>accuratePasses</th>
+          <th>keyPasses</th>
+          <th>dribbles</th>
+          <th>totalThroughBalls</th>
+          <th>accurateThroughBalls</th>
+          <th>teamName</th>
+          <th>name</th>
+        </tr>
+      </thead>
+      <tbody>
+        <td>{{player.id}}</td>
+        <td>{{player.goals}}</td>
+        <td>{{player.assists}}</td>
+        <td>{{player.totalPasses}}</td>
+        <td>{{player.accuratePasses}}</td>
+        <td>{{player.keyPasses}}</td>
+        <td>{{player.dribbles}}</td>
+        <td>{{player.totalThroughBalls}}</td>
+        <td>{{player.accurateThroughBalls}}</td>
+        <td>{{player.teamName}}</td>
+        <td>{{player.name}}</td>
+      </tbody>
+    </table>
+  </div>
+  <stat-canvas player='player'></stat-canvas>
+</div>
+
