@@ -1,9 +1,9 @@
 angular.module('soccerApp')
   .directive('statCanvas', function($window) {
     return {
-      restrict: "E",
+      restrict: 'E',
       scope: {
-        player: "="
+        player: '='
       },
       // template: '<div>Here</div>',
       controller: function($scope){
@@ -59,7 +59,7 @@ angular.module('soccerApp')
           var myAngle = toRadian(angle)
           var y = r * Math.sin(myAngle)
           var x = r * Math.cos(myAngle)
-          return { "x": x, "y": y}
+          return { 'x': x, 'y': y}
         };
 
 
@@ -133,7 +133,7 @@ angular.module('soccerApp')
         this.drawCanvas = function(context, attrs){
 
           this.drawBackgroundCircle(context)
-          var dataCircles = $("data-circle");
+          var dataCircles = $('data-circle');
           var that = this;
           var lastCoord = {};
           var firstCoord = {};
@@ -164,7 +164,7 @@ angular.module('soccerApp')
           })
         }
 
-        this.setAttrs = function(circleEnter, hash){
+        this.setCircleAttrs = function(circleEnter, hash){
           var that = this;
           circleEnter.attr(hash.y, function( d, i ){
             var coord = that.getAngle(d,i, hash.radianAngle)
@@ -185,16 +185,34 @@ angular.module('soccerApp')
           });
         };
 
+        this.setLineAttrs = function(lineEnter, hash){
+          var that = this;
+          lineEnter.attr('y2', 360)
+          lineEnter.attr('x2', 360)
+          lineEnter.attr('stroke', 'blue')
+          lineEnter.attr('stroke-width', 1)
+          lineEnter.attr('y1', function( d, i ){
+            var coord = that.getAngle(d,i, hash.radianAngle)
+            return coord.y + 360;
+          });
+
+          lineEnter.attr('x1', function(d, i) {
+            var coord = that.getAngle(d,i, hash.radianAngle)
+            return coord.x + 360;
+          });
+        };
+
+
         this.drawCanvasStyle = function(attrs){
           var d3 = $window.d3;
           var base = d3.select('stat-canvas');
           var that = this;
 
-          var canvas = base.append("canvas")
-            .attr("width", 720)
-            .attr("height", 720);
+          var canvas = base.append('canvas')
+            .attr('width', 720)
+            .attr('height', 720);
 
-          var context = canvas.node().getContext("2d");
+          var context = canvas.node().getContext('2d');
 
           var attr_array = this.hasherizePlayer($scope.player)
 
@@ -205,7 +223,7 @@ angular.module('soccerApp')
 
           var circleEnter = circle.enter().append('data-circle');
 
-          this.setAttrs(circleEnter, {x: 'x', y: 'y', radianAngle: radianAngle});
+          this.setCircleAttrs(circleEnter, {x: 'x', y: 'y', radianAngle: radianAngle});
 
           this.drawCanvas(context, attrs);
 
@@ -216,8 +234,8 @@ angular.module('soccerApp')
           var base = d3.select('stat-canvas');
           var that = this;
           var svg = base.append('svg')
-            .attr("width", 720)
-            .attr("height", 720);
+            .attr('width', 720)
+            .attr('height', 720);
           var grouping = svg.append('g').attr('id', 'nodes');
           var attr_array = this.hasherizePlayer($scope.player);
           var circle = grouping.selectAll('circle.node').data(attr_array);
@@ -225,13 +243,51 @@ angular.module('soccerApp')
 
           var totalEntries = attr_array.length;
           var radianAngle = 360 / totalEntries;
-          var circleEnter = circle.enter().append('circle').attr("class", "node");
+          var groupEnter = circle.enter().append('g');
+          var circleEnter = groupEnter.append('circle').attr('class', 'node');
+          var lineEnter = groupEnter.append('line');
 
-          circle.on('mouseover', function(){
-            console.log('mouse')
+          circleEnter.append("circle:title")
+            .text(function(d) { return d.attribute; });
+          var tooltip = d3.select("body")
+              .append("div")
+              .style("position", "absolute")
+              .style("z-index", "10")
+              // .style("visibility", "hidden")
+              .text("a simple tooltip");
+
+          // circle.on("mouseover", function(){return tooltip.style("visibility", "visible");})
+          circle.on("mousemove", function(){return tooltip.style("top",
+                  (d3.event.pageY-10)+"px").style("left",(d3.event.pageX+10)+"px");})
+          // circle.on("mouseout", function(){return tooltip.style("visibility", "hidden");});
+
+          circle.on('mouseover', function( d, i ){
+            // var content = '<p class="main">' + d.attribute + '</span></p>'
+            // content += '<hr class="tooltip-hr">'
+            // content += '<p class="main">' + d.val + '</span></p>'
+            // var event = d3.event
+
+            // var x = event.x
+            // var y = event.y
+            // var xPositive = (x - 360) > 0
+            // var yPositive = (y - 360) > 0
+            // var tooltip = Tooltip("vis-tooltip", 230)
+            // console.log(tooltip)
+
+
+            // console.log(xNegative)
+            // console.log(yNegative)
+                    // var d3_this = d3.select(this);
+            // d3_this.style('background-color', 'black')
+            // var _this = $(d3.select(this)[0])
+
+            // var hoverCircle = $(_this.children('circle')[0])
+            // console.log(hoverCircle)
           });
 
-          this.setAttrs(circleEnter, {x: 'cx', y: 'cy', radianAngle: radianAngle});
+          this.setCircleAttrs(circleEnter, {x: 'cx', y: 'cy', radianAngle: radianAngle});
+          this.setLineAttrs(lineEnter, {radianAngle: radianAngle});
+          // this.setTextAtts(textEnter, {radianAngle: radianAngle});
 
           circleEnter.attr('r', function(d, i) {
             return 5;
