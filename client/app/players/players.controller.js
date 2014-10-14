@@ -14,8 +14,5 @@ angular.module('soccerApp')
     });
   })
   .controller('playersShowCtrl', function(players, player, $scope, $stateParams, $window){
-    var d3 = $window.d3;
-    var canvas = d3.select('stat-canvas');
     $scope.player = player;
-
   });
