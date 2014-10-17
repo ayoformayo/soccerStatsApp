@@ -110,9 +110,16 @@ angular.module('soccerApp')
           for (var key in player) {
               var new_hash = {};
               if(that.max_hash[key] !== undefined){
+                var maxVal = that.max_hash[key].val;
+                var percent;
+                if(maxVal === 0){
+                  percent = 0;
+                }else{
+                  percent = (player[key] / maxVal)
+                }
 
-                new_hash['val'] = player[key];
-                new_hash['attribute'] = key;
+                new_hash['value'] = percent;
+                new_hash['axis'] = key;
                 attr_array.push(new_hash);
               }
             };
@@ -261,12 +268,47 @@ angular.module('soccerApp')
           var d3 = $window.d3;
           var base = d3.select('stat-canvas');
           var that = this;
-          var svg = base.append('svg')
-            .attr('width', 1000)
-            .attr('height', 1000);
+
+          var chart = RadarChart.chart();
+          var attr_array = this.hasherizePlayer($scope.player);
+
+          var data = [
+                      {
+                        className: 'player',
+                        axes: attr_array
+                      }
+                    ];
+
+          var radarDiv = base.append('div').attr('class', 'radarSvg');
+          RadarChart.draw('.radarSvg', data);
+          var svg = base.append('svg').attr('class', 'attrSvg');
+
+            svg.attr('width', 500);
+            svg.attr('height', 1000);
+
+          var attrGroup = svg.append('g').attr('id', 'dataAttrs');
+          var attrData = attrGroup.selectAll('g').data(attr_array);
+          var attrGroupEnter = attrData.enter().append('g');
+          var attrText = attrGroupEnter.append('text');
+          attrText.text(function(d, i){return d.axis})
+          attrText.attr('x', 100)
+          attrText.attr('y', function(d, i){return i * 10 + 20})
+
+          var activeAttrs = [];
+          attrGroupEnter.on('click', function(d, i){
+            var _this = d3.select(this);
+            var thisText = _this.selectAll('text')
+            thisText.style('fill', 'red')
+            activeAttrs.push(d);
+            data[0].axes = activeAttrs;
+            RadarChart.draw('.radarSvg', data);
+          });
+
+
+
+
 
           // var backgroundCircle = svg.append('circle').attr({'cx': 500, 'cy': 500, 'r': 360, 'stroke':'black', 'stroke-width': 1, 'fill': 'white'})
-          // var attr_array = this.hasherizePlayer($scope.player);
           // var grouping = svg.append('g').attr('id', 'nodes');
           // var totalEntries = attr_array.length;
           // var radianAngle = 360 / totalEntries;
@@ -390,7 +432,7 @@ angular.module('soccerApp')
           // var circles = d3.selectAll('circle.node');
 
 
-
+// THIS IS BREAKING POINT
 
           // var circle = grouping.selectAll('circle.node').data(attr_array);
 

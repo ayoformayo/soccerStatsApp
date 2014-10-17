@@ -14,7 +14,101 @@ var Player = require('./player.model');
 
 // Get list of things
 exports.index = function(req, res) {
-  Player.find(function (err, players) {
+  var players = Player.find({}).limit(20).sort({minsPlayed: -1})
+  // var max_array =
+  //          [
+  //           'age',
+  //           'height',
+  //           'weight',
+  //           'apps',
+  //           'subOn',
+  //           'minsPlayed',
+  //           'rating',
+  //           'tackleWonTotal',
+  //           'tackleTotalAttempted',
+  //           'challengeLost',
+  //           'interceptionAll',
+  //           'foulGiven',
+  //           'foulCommitted',
+  //           'offsideGiven',
+  //           'clearanceTotal',
+  //           'dribbleLost',
+  //           'dribbleWon',
+  //           'outfielderBlock',
+  //           'passCrossBlockedDefensive',
+  //           'outfielderBlockedPass',
+  //           'shotOffTarget',
+  //           'shotOnPost',
+  //           'shotOnTarget',
+  //           'shotsTotal',
+  //           'shotBlocked',
+  //           'shotSixYardBox',
+  //           'shotPenaltyArea',
+  //           'shotOboxTotal',
+  //           'shotOpenPlay',
+  //           'shotCounter',
+  //           'shotSetPiece',
+  //           'penaltyTaken',
+  //           'shotRightFoot',
+  //           'shotLeftFoot',
+  //           'shotHead',
+  //           'goalSixYardBox',
+  //           'goalPenaltyArea',
+  //           'goalObox',
+  //           'goalTotal',
+  //           'goalOwn',
+  //           'goalOpenPlay',
+  //           'goalCounter',
+  //           'goalSetPiece',
+  //           'penaltyScored',
+  //           'goalNormal',
+  //           'goalRightFoot',
+  //           'goalLeftFoot',
+  //           'goalHead',
+  //           'yellowCard',
+  //           'redCard',
+  //           'turnover',
+  //           'dispossessed',
+  //           'saveSixYardBox',
+  //           'savePenaltyArea',
+  //           'saveObox',
+  //           'duelAerialWon',
+  //           'duelAerialLost',
+  //           'passLongBallAccurate',
+  //           'passLongBallInaccurate',
+  //           'shortPassAccurate',
+  //           'shortPassInaccurate',
+  //           'passCrossAccurate',
+  //           'passCrossInaccurate',
+  //           'passCornerAccurate',
+  //           'passCornerInaccurate',
+  //           'passFreekickAccurate',
+  //           'passFreekickInaccurate',
+  //           'keyPassLong',
+  //           'keyPassShort',
+  //           'keyPassCross',
+  //           'keyPassCorner',
+  //           'keyPassThroughball',
+  //           'keyPassFreekick',
+  //           'keyPassThrowin',
+  //           'keyPassOther',
+  //           'assistCross',
+  //           'assistCorner',
+  //           'assistThroughball',
+  //           'assistFreekick',
+  //           'assistThrowin',
+  //           'assistOther'
+  //          ]
+
+  //         _.each(max_array, function(key){
+  //           var query = Player.find({}).limit(1).sort([[key, 'descending']]);
+  //           query.exec(function(err, player){
+  //             var player_hash = {}
+  //             player_hash[key] = {name: player[0].name, val: player[0][key]}
+  //             console.log(player_hash)
+  //           })
+  //         })
+  players.exec(function (err, players) {
     if(err) { return handleError(res, err); }
     return res.json(200, players);
   });

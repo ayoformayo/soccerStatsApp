@@ -15,7 +15,8 @@
     "lodash": "~2.4.1",
     "angular-socket-io": "~0.6.0",
     "angular-ui-router": "~0.2.10",
-    "d3": "3.4.11"
+    "d3": "3.4.11",
+    "radar-chart-d3": "git@github.com:alangrafu/radar-chart-d3.git"
   },
   "devDependencies": {
     "angular-mocks": ">=1.2.*",
