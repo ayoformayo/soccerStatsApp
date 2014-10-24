@@ -1,11 +1,10 @@
 angular.module('soccerApp')
-  .directive('statCanvas', function($window) {
+  .directive('statCanvas', function($window, players) {
     return {
       restrict: 'E',
       scope: {
         player: '='
       },
-      // template: '<div>Here</div>',
       controller: function($scope){
 
         this.max_hash = { age: { name: 'Faryd Mondragón', val: 43 },
@@ -90,20 +89,6 @@ angular.module('soccerApp')
           assistThrowin: { name: 'Serey Die', val: 0 },
           assistCorner: { name: 'Toni Kroos', val: 2 } }
 
-        this.calculateCoordinates = function(angle, percent){
-          var r = 360 * percent;
-          var myAngle = this.toRadian(angle)
-          var y = r * Math.sin(myAngle)
-          var x = r * Math.cos(myAngle)
-          return { 'x': x, 'y': y}
-        };
-
-        this.toRadian = function (radianAngle) {
-          return radianAngle * (Math.PI / 180);
-        }
-
-
-
         this.hasherizePlayer = function(player){
           var attr_array = [];
           var that = this;
@@ -125,143 +110,6 @@ angular.module('soccerApp')
             };
 
           return attr_array;
-        };
-
-        this.getAngle = function(d, i, radianAngle) {
-          var val = d.val
-          var playerAttr = d.attribute;
-          var maxVal = this.max_hash[playerAttr].val;
-          if(val === 0 || maxVal === 0){ return {x: 0, y: 0};}
-          var percent = (val / maxVal)
-
-          var myAngle = radianAngle * i;
-          var coord = this.calculateCoordinates(myAngle, percent);
-          return coord;
-        }
-
-        this.setCircleAttrs = function(circleEnter, hash){
-          var that = this;
-          circleEnter.attr(hash.y, function( d, i ){
-            var coord = that.getAngle(d,i, hash.radianAngle)
-            return coord.y + 500;
-          });
-
-          circleEnter.attr(hash.x, function(d, i) {
-            var coord = that.getAngle(d,i, hash.radianAngle)
-            return coord.x + 500;
-          });
-
-          circleEnter.attr('data-stat-value', function( d, i ){
-            return d.val;
-          });
-
-          circleEnter.attr('data-stat-attribute', function(d, i){
-            return d.attribute;
-          });
-        };
-
-        this.setLineAttrs = function(lineEnter, hash){
-          var that = this;
-          lineEnter.attr('y2', 500)
-          lineEnter.attr('x2', 500)
-          lineEnter.attr('stroke', 'blue')
-          lineEnter.attr('stroke-width', 1)
-          lineEnter.attr('y1', function( d, i ){
-            var coord = that.getAngle(d,i, hash.radianAngle)
-            return coord.y + 500;
-          });
-
-          lineEnter.attr('x1', function(d, i) {
-            var coord = that.getAngle(d,i, hash.radianAngle)
-            return coord.x + 500;
-          });
-        };
-
-        this.setCircleEnter = function(circleEnter){
-            circleEnter.append("circle:title")
-            .text(function(d) { return d.attribute; });
-
-          circleEnter.attr({'stroke':'black', 'stroke-width': 1, 'r': 5});
-
-          circleEnter.style('fill', function(d, i){
-            var letters = '0123456789ABCDEF'.split('');
-            var color = '#';
-            for (var i = 0; i < 6; i++ ) {
-                color += letters[Math.floor(Math.random() * 16)];
-            }
-            return color;
-          });
-        };
-
-        this.drawLine = function(path){
-         var d3 = $window.d3;
-          var svg = d3.select('svg');
-          var new_line = svg.append('line');
-           // .attr({'x1': path.x1, 'x2': path.x2, 'y1': path.y1, 'y2': path.y2})
-          new_line.attr('y1', path.y1)
-          new_line.attr('x1', path.x1)
-          new_line.attr('y2', path.y2)
-          new_line.attr('x2', path.x2)
-          new_line.attr('stroke', 'blue')
-          new_line.attr('stroke-width', 1)
-        }
-
-        this.drawPolygon = function(){
-          var circleCollect = d3.selectAll('circle.node')[0];
-          var coords_array = [];
-          _.each(circleCollect, function(circle){
-            var hash = {};
-            hash['cx'] = d3.select(circle).attr('cx')
-            hash['cy'] = d3.select(circle).attr('cy')
-            coords_array.push(hash)
-          });
-
-          var first_coord = {}
-          var that = this;
-
-          d3.selectAll('circle.node').style('visibility', 'hidden')
-
-          for( i = 0; i < coords_array.length; i++){
-            if(i === coords_array.length -1){
-              var path = {
-                'x1': coords_array[i].cx,
-                'y1': coords_array[i].cy,
-                'x2': first_coord.cx,
-                'y2': first_coord.cy,
-              }
-              return this.drawLine(path)
-            }
-
-            if(i === 0){ first_coord = coords_array[i] };
-            var path = {
-              'x1': coords_array[i].cx,
-              'y1': coords_array[i].cy,
-              'x2': coords_array[i+1].cx,
-              'y2': coords_array[i+1].cy,
-            }
-
-            this.drawLine(path)
-          }
-        };
-          // var otherAngle = 180 - radianAngle - 90;
-
-        this.writeTicks = function(groupEnter, radianAngle){
-          var that = this;
-
-          groupEnter.append('text').attr('x', function(d,i){
-            var myAngle = radianAngle * i;
-            var startText = that.calculateCoordinates(myAngle, 1.03)
-            // var endText = that.calculateCoordinates(myAngle, 1.02)
-            // calculateCoordinates(myAngle, 1.01)
-            return startText.x + 500;
-          }).attr('y', function(d, i){
-            var myAngle = radianAngle * i;
-            var startText = that.calculateCoordinates(myAngle, 1.03)
-            return startText.y + 500;
-          }).text(function(d, i){
-            return d.attribute + ': ' + d.val;
-          })
-
         };
 
         this.drawSvgStyle = function(attrs){
@@ -290,202 +138,43 @@ angular.module('soccerApp')
           var attrData = attrGroup.selectAll('g').data(attr_array);
           var attrGroupEnter = attrData.enter().append('g');
           var attrText = attrGroupEnter.append('text');
-          attrText.text(function(d, i){return d.axis})
-          attrText.attr('x', 100)
-          attrText.attr('y', function(d, i){return i * 10 + 20})
+          attrText.text(function(d, i){return d.axis});
+          attrText.attr('x', 100);
+          attrText.attr('y', function(d, i){return i * 10 + 20});
 
           var activeAttrs = [];
           attrGroupEnter.on('click', function(d, i){
             var _this = d3.select(this);
-            var thisText = _this.selectAll('text')
-            thisText.style('fill', 'red')
+            var thisText = _this.selectAll('text');
+            thisText.style('fill', 'red');
             activeAttrs.push(d);
             data[0].axes = activeAttrs;
             RadarChart.draw('.radarSvg', data);
           });
 
+          var playerArray = [];
+          var playerGroup = svg.append('g').attr('id', 'playerAttrs');
+          var playerData = playerGroup.selectAll('g').data(players.players);
+          var playerDataEnter = playerData.enter().append('g');
+          var playerText = playerDataEnter.append('text');
+          playerText.text(function(d, i){
+            return d.name;
+          });
 
+          playerText.attr('x', 300);
+          playerText.attr('y', function(d, i){return i * 10 + 20});
+          playerText.on('click', function(d, i){
+            var hasherized = that.hasherizePlayer(d);
+            data.push({axes: hasherized });
+            svg.append('g').classed('single', 1).datum(data).call(chart);
+          });
 
-
-
-          // var backgroundCircle = svg.append('circle').attr({'cx': 500, 'cy': 500, 'r': 360, 'stroke':'black', 'stroke-width': 1, 'fill': 'white'})
-          // var grouping = svg.append('g').attr('id', 'nodes');
-          // var totalEntries = attr_array.length;
-          // var radianAngle = 360 / totalEntries;
-          // var tooltipPresent = $('.tooltipDiv').length > 0;
-          // if(!tooltipPresent){
-          //   d3.select('.playerContainer').append('div')
-          //     .attr('class', 'tooltipDiv');
-          // }
-          // var tooltip = d3.select(".tooltipDiv")
-          //     .style("position", "absolute")
-          //     .style("z-index", "10")
-          //     .style("visibility", "hidden")
-          //     .text("a simple tooltip");
-
-
-
-          // var group = grouping.selectAll('g').data(attr_array);
-          // var groupEnter = group.enter().append('g');
-          // var lineEnter = groupEnter.append('line');
-          // var textEnter = groupEnter.append('text');
-          // var circleEnter = groupEnter.append('circle').attr('class', 'node');
-          // lineEnter.attr('x1', function(d, i){
-          //   return 0;
-          // });
-
-          // lineEnter.attr('y1', function(d, i){
-          //   return 0;
-          // });
-
-          // lineEnter.attr('x2', function(d, i){
-          //   var val = d.val
-          //   var playerAttr = d.attribute;
-          //   var maxVal = that.max_hash[playerAttr].val;
-          //   var percent;
-          //   if( maxVal === 0){
-          //     percent = 0
-          //   }else{
-          //     percent = (val / maxVal)
-          //   }
-          //   return percent * 360;
-          // });
-
-          // lineEnter.attr('y2', function(d, i){
-          //   return 0;
-          // });
-
-          // lineEnter.attr('stroke-width', 1);
-          // lineEnter.attr('stroke', 'blue');
-          // circleEnter.attr('r', 5);
-
-
-          // groupEnter.attr("transform", function(d, i){
-          //   var transformAngle;
-          //   if(i === 0){
-          //     transformAngle = 0;
-          //   }else{
-          //     transformAngle = radianAngle * i;
-          //   }
-          //   return 'translate(500,500)rotate(' + transformAngle + ')'
-          // });
-
-          // circleEnter.attr('cy', 0);
-          // var that = this;
-
-          // circleEnter.attr('cx', function(d, i){
-          //   var val = d.val
-          //   var playerAttr = d.attribute;
-          //   var maxVal = that.max_hash[playerAttr].val;
-          //   var percent;
-          //   if( maxVal === 0){
-          //     percent = 0
-          //   }else{
-          //     percent = (val / maxVal)
-          //   }
-          //   return percent * 360;
-          // });
-
-          // textEnter.attr('x', function(d, i){
-          //   return 370;
-          // })
-
-          // textEnter.attr('y', function(d, i){
-          //   return 0;
-          // });
-
-          // textEnter.text(function(d, i){
-          //   return d.attribute + ' - ' + d.val;
-          // });
-
-
-
-          // group.on('mousemove', function(d, i){
-          //    var _this = d3.select(this);
-          //   var line = _this.select('line');
-          //   var thisCircle = _this.select('circle');
-          //   var thisText= _this.select('text');
-          //   thisText.style('font-weight', 'bold');
-          //   thisCircle.attr('r', 10);
-          //   thisCircle.attr('stroke-width', 3)
-          //   line.attr('stroke-width', 3)
-          //   tooltip.text(d.attribute + ' - ' + d.val)
-          //   content = '<p class="main">' + d.attribute + '</span></p>'
-          //   content += '<hr class="tooltip-hr">'
-          //   content += '<p class="main">' + d.val + '</span></p>'
-          //   tooltip.html(content)
-          //   tooltip.style("visibility", "visible")
-          //   return tooltip.style("top", (d3.event.pageY-10)+"px").style("left",(d3.event.pageX+10)+"px");
-          // });
-
-          // group.on('mouseout', function(d, i){
-          //   var _this = d3.select(this);
-          //   var line = _this.select('line');
-          //   var thisText= _this.select('text');
-          //   thisText.style('font-weight', 'normal');
-          //   var thisCircle = _this.select('circle')
-          //   line.attr('stroke-width', 1)
-          //   thisCircle.attr({'stroke-width': 1, 'r': 5})
-          //   return tooltip.style("visibility", "hidden");
-          // });
-
-          // var circles = d3.selectAll('circle.node');
-
-
-// THIS IS BREAKING POINT
-
-          // var circle = grouping.selectAll('circle.node').data(attr_array);
-
-
-          // // groupEnter.attr("transform", "translate(500,500)rotate(50)")
-          // var groupEnter = circle.enter().append('g');
-          // var lineEnter = groupEnter.append('line');
-          // var circleEnter = groupEnter.append('circle').attr('class', 'node');
-          // this.setCircleEnter(circleEnter);
-
-          // // circleEnter.append("circle:title")
-          // //   .text(function(d) { return d.attribute; });
-
-          // // default values
-
-
-          // circle.on("mousemove", function(d, i){
-          //   var _this = d3.select(this);
-          //   var line = _this.select('line');
-          //   var thisCircle = _this.select('circle')
-          //   thisCircle.attr('r', 10)
-          //   thisCircle.attr('stroke-width', 3)
-          //   line.attr('stroke-width', 3)
-          //   tooltip.text(d.attribute + ' - ' + d.val)
-          //   content = '<p class="main">' + d.attribute + '</span></p>'
-          //   content += '<hr class="tooltip-hr">'
-          //   content += '<p class="main">' + d.val + '</span></p>'
-          //   tooltip.html(content)
-          //   tooltip.style("visibility", "visible")
-          //   return tooltip.style("top", (d3.event.pageY-10)+"px").style("left",(d3.event.pageX+10)+"px");
-          // })
-
-          // circle.on('mouseout', function(d, i){
-          //   var _this = d3.select(this);
-          //   var line = _this.select('line');
-          //   var thisCircle = _this.select('circle')
-          //   line.attr('stroke-width', 1)
-          //   thisCircle.attr({'stroke-width': 1, 'r': 5})
-          //   return tooltip.style("visibility", "hidden");
-          // })
-
-          // this.setCircleAttrs(circleEnter, {x: 'cx', y: 'cy', radianAngle: radianAngle});
-          // // this.setLineAttrs(lineEnter, {radianAngle: radianAngle});
-
-          // this.drawPolygon();
-          // this.writeTicks(groupEnter, radianAngle);
 
         }
       },
 
       link: function(scope, elem, attrs, ctrl){
 
-        // ctrl.drawCanvasStyle(attrs);
         ctrl.drawSvgStyle(attrs)
 
       }

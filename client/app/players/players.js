@@ -20,6 +20,10 @@ angular.module('soccerApp')
         resolve: {
           player: ["$stateParams", "players", function($stateParams, players){
             return players.get($stateParams.id);
+          }],
+          playersPromise: ['players', function(players){
+            if(players.players.length > 0){ return true }
+            return players.fetch();
           }]
         }
       })
