@@ -3,8 +3,8 @@ angular.module("soccerApp")
   .controller("playersIndexCtrl", function ($scope, $http, socket, players, playersPromise, $window) {
     var ctrl = this;
     var d3 = $window.d3;
-    var width = 500,
-        height = 700,
+    var width = 1000,
+        height = 1000,
         radius = Math.min(width, height) / 2,
         color = d3.scale.category20c();
     var x = d3.scale.linear()
@@ -16,7 +16,7 @@ angular.module("soccerApp")
     var svg = d3.select('.svg-container').append('svg')
       .attr('width', width)
       .attr('height', height)
-      .append('g').attr("transform", "translate(" + width / 2 + "," + (height / 2 + 10) + ")");
+      // .append('g').attr("transform", "translate(" + width / 2 + "," + (height / 2 + 10) + ")");
     var playerArray = players.players;
 
     var dictionary = {
@@ -311,73 +311,15 @@ angular.module("soccerApp")
       d.dx0 = d.dx;
     }
 
+    var yScale = d3.scale.linear ()
+        .domain([0, playerArray.length])
+        .range([0, height]);
 
-  // Interpolate the arcs in data space.
+    var playerEnter = svg.selectAll('rect')
+      .data(players.players)
+      .enter();
 
-
-    var partition = d3.layout.partition()
-      .sort(null)
-      .size([2 * Math.PI, radius * radius])
-      .value(function(d) { return 1; });
-
-
-    var arc = d3.svg.arc()
-      .startAngle(function(d) { return d.x; })
-      .endAngle(function(d) { return d.x + d.dx; })
-      .innerRadius(function(d) { 
-        return Math.sqrt(d.y); 
-      })
-      .outerRadius(function(d) { 
-        return Math.sqrt(d.y + d.dy); 
-      });
-
-      // .innerRadius(function(d) { return Math.max(0, d.y ? y(d.y) : d.y); })
-      // .outerRadius(function(d) { return Math.max(0, y(d.y + d.dy)); });
-
-    var path = svg.datum(max_hash).selectAll("path")
-          .data(partition.nodes)
-
-     var pathEnter = path.enter().append("path")
-          .attr("display", function(d) { return d.depth ? null : "none"; }) // hide inner ring
-          .attr("d", arc)
-          .style("stroke", "#fff")
-          .style("fill", function(d) { return color((d.children ? d : d.parent).name); })
-          .style("fill-rule", "evenodd")
-          .each(stash);
-    path.on('click', function(d){
-      console.log(d)
-    })
-
-    var text = svg.selectAll("text").datum(max_hash).data(partition.nodes);
-
-    var textEnter = text.enter().append("text")
-        .style("fill-opacity", 1)
-        .style("fill", function(d) {
-          return "#eee";
-        })
-        .attr("text-anchor", function(d) {
-          return 'end';
-        })
-        .attr("dy", ".2em")
-
-
-    d3.select(self.frameElement).style("height", height + "px");
-
-    textEnter.append("tspan")
-        .attr("x", 0)
-        .text(function(d) { return d.name});
-
-
-
-    // var yScale = d3.scale.linear ()
-    //     .domain([0, playerArray.length])
-    //     .range([0, h]);
-
-    // var playerEnter = svg.selectAll('rect')
-    //   .data(players.players)
-    //   .enter();
-
-    // var playerBars = playerEnter.append('text');
+    var playerBars = playerEnter.append('text');
 
     this.calcCoordinates = function(d, angle){
       var record = dictionary[d.attribute].val
@@ -420,81 +362,81 @@ angular.module("soccerApp")
     }
 
     var _this = this;
-    // playerBars.on('click', function(e){
-    //   var hash_array = [];
-    //   for(var k in e){
-    //     if(typeof e[k] === 'number' && dictionary[k]){
-    //       var hash = {};
-    //       hash.val = e[k];
-    //       hash.attribute = k;
-    //       hash_array.push(hash)
-    //     }
-    //   }
+    playerBars.on('click', function(e){
+      var hash_array = [];
+      for(var k in e){
+        if(typeof e[k] === 'number' && dictionary[k]){
+          var hash = {};
+          hash.val = e[k];
+          hash.attribute = k;
+          hash_array.push(hash)
+        }
+      }
 
-    //   var rotateScale = d3.scale.linear ()
-    //       .domain([0, hash_array.length])
-    //       .range([0, 360]);
+      var rotateScale = d3.scale.linear ()
+          .domain([0, hash_array.length])
+          .range([0, 360]);
 
-    //   var groupEnter = svg.selectAll('.circle')
-    //   .data(hash_array)
-    //   .enter()
-    //   .append('g')
+      var groupEnter = svg.selectAll('.circle')
+      .data(hash_array)
+      .enter()
+      .append('g')
 
-    //   var coordinates = [];
-    //   var percents = [.25, .5, .75, 1];
+      var coordinates = [];
+      var percents = [.25, .5, .75, 1];
 
-    //   var furthest = []
-    //   _.each(percents, function(percent, i){
-    //     var percentCoords = [];
-    //     _.each(hash_array, function(hash, it){
-    //       percentCoords.push(_this.mathShit(rotateScale(it), percent));
-    //     });
-    //     furthest.push(percentCoords)
-    //   })
+      var furthest = []
+      _.each(percents, function(percent, i){
+        var percentCoords = [];
+        _.each(hash_array, function(hash, it){
+          percentCoords.push(_this.mathShit(rotateScale(it), percent));
+        });
+        furthest.push(percentCoords)
+      })
 
-    //   _this.createOutlines(furthest);
+      _this.createOutlines(furthest);
 
-    //   groupEnter.append('circle')
-    //   .attr('cx', function(d, i){
-    //     var coord = _this.calcCoordinates(d, rotateScale(i));
-    //     var furtherCoord = _this.calcCoordinates(d, rotateScale(i));
-    //     coordinates.push(coord)
-    //     return coord.x;
-    //   })
-    //   .attr('cy', function(d, i){
-    //     var coord = _this.calcCoordinates(d, rotateScale(i));
-    //     return coord.y;
-    //   })
-    //   .attr('stroke', function(d, i){return 'rgb(255,0,0)' })
-    //   .attr('stroke-width', function(d, i){return 1})
-    //   .attr('r', function(d, i){ return 3});
+      groupEnter.append('circle')
+      .attr('cx', function(d, i){
+        var coord = _this.calcCoordinates(d, rotateScale(i));
+        var furtherCoord = _this.calcCoordinates(d, rotateScale(i));
+        coordinates.push(coord)
+        return coord.x;
+      })
+      .attr('cy', function(d, i){
+        var coord = _this.calcCoordinates(d, rotateScale(i));
+        return coord.y;
+      })
+      .attr('stroke', function(d, i){return 'rgb(255,0,0)' })
+      .attr('stroke-width', function(d, i){return 1})
+      .attr('r', function(d, i){ return 3});
 
-    //   var polygon = svg.append('path');
-    //   polygon.attr('d', function(){
-    //     var string = ''
-    //     var first;
-    //     _.each(coordinates, function(coord, i){
-    //       if(i === 0 ){
-    //         string = string+ 'M ' + coord.x + ' ' +coord.y
-    //         first = ' L ' + coord.x + ' ' +coord.y
-    //       }
-    //       else{
-    //         string = string+ 'L ' + coord.x + ' ' +coord.y
-    //       }
-    //     });
-    //     string = string + first;
-    //     return string
-    //   })
-    //   .attr('fill', function(){ return 'red'})
-    //   .attr('stroke-width', function(){ return 2})
-    //   .attr('stroke', function(){ return 'blue'});
+      var polygon = svg.append('path');
+      polygon.attr('d', function(){
+        var string = ''
+        var first;
+        _.each(coordinates, function(coord, i){
+          if(i === 0 ){
+            string = string+ 'M ' + coord.x + ' ' +coord.y
+            first = ' L ' + coord.x + ' ' +coord.y
+          }
+          else{
+            string = string+ 'L ' + coord.x + ' ' +coord.y
+          }
+        });
+        string = string + first;
+        return string
+      })
+      .attr('fill', function(){ return 'red'})
+      .attr('stroke-width', function(){ return 2})
+      .attr('stroke', function(){ return 'blue'});
 
-    // });
+    });
 
-    // playerBars.text(function(d, i){ 
-    //     return d.name })
-    //   .attr('x', function(d, i){return 0})
-    //   .attr('y', function(d, i){return yScale(i)});
+    playerBars.text(function(d, i){ 
+        return d.name })
+      .attr('x', function(d, i){return 0})
+      .attr('y', function(d, i){return yScale(i)});
 
 
     $scope.$on("$destroy", function () {
