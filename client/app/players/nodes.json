@@ -1,0 +1,200 @@
+{
+      "name": "Stats",
+      "children": [{
+                    "name": "Summary",
+                     "children" :[ 
+                      {"name": "age" },
+                      {"name": "apps" },
+                      {"name": "height" },
+                      {"name": "minsPlayed" },
+                      {"name": "rating" },
+                      {"name": "subOn" },
+                      {"name": "weight"}
+                    ]},
+                    {"name": "Defensive",
+                      "children": [
+                      {"name": "tackles",
+                       "children": [
+                        {"name": "tackleTotalAttempted" },
+                        {"name": "tackleWonTotal" },
+                        {"name": "DribbledPast" }
+                        ]
+                      },
+                      {"name": "interceptions",
+                       "children": [
+                        {"name": "interceptionAll" },
+                        ]
+                      },
+                      { "name": "fouls",
+                      "children": [
+                       {"name": "foulCommitted" },
+                       {"name": "foulGiven" },
+                       ]
+                      },
+                      {"name": "cards",
+                       "children": [
+                        {"name": "redCard" },
+                        {"name": "yellowCard" }
+                        ]
+                      },
+                       { "name": "offsides",
+                        "children": [
+                         {"name": "offsideGiven" },
+                         ]
+                       },
+                       { "name": "clearances",
+                        "children": [
+                         {"name": "clearanceTotal" },
+                        ]
+                      },
+                      { "name": "blocks",
+                       "children": [
+                        {"name": "ShotsBlocked" },
+                        {"name": "outfielderBlockedPass" },
+                        {"name": "passCrossBlockedDefensive" }
+                        ]
+                      },
+                      {"name": "saves",
+                       "children": [
+                        {"name": "saveObox" },
+                        {"name": "savePenaltyArea" },
+                        {"name": "saveSixYardBox" },
+                        // "Total"
+                        ]
+                      },
+                    ]},
+                    {"name": "Offensive",
+                     "children": [
+                      {"name": "shots",
+                       "children": [                      
+                        {"name": "zones",
+                         "children": [
+                          {"name": "shotsTotal" },
+                          {"name": "shotOboxTotal" },
+                          {"name": "shotSixYardBox" },
+                          {"name": "shotPenaltyArea" }
+                        ]},
+                        {"name": "situations",
+                         "children": [
+                          {"name": "shotsTotal" },
+                          {"name": "shotOpenPlay" },
+                          {"name": "shotCounter" },
+                          {"name": "shotSetPiece" },
+                          {"name": "penaltyTaken" }
+                        ]},
+                        {"name": "accuracy",
+                         "children": [
+                          // "Total",
+                          {"name": "shotOffTarget" },
+                          {"name": "shotOnPost" },
+                          {"name": "shotOnTarget" },
+                          {"name": "shotBlocked" },
+                        ]},
+                        {"name": "body parts",
+                         "children": [
+                          {"name": "shotHead" },
+                          {"name": "shotLeftFoot" },
+                          {"name": "shotRightFoot" },
+                          {"name": "shotsTotal" },
+                          // "Other"
+                        ]}
+                      ]},
+                      {"name": "goals",
+                       "children": [
+                        {"name": "zones",
+                         "children": [
+                          {"name": "goalSixYardBox" },
+                          {"name": "goalTotal" },
+                          {"name": "goalPenaltyArea" },
+                          {"name": "goalObox" },
+                        ]},
+                        {"name": "situations",
+                         "children": [
+                          {"name": "goalOpenPlay" },
+                          {"name": "goalCounter" },
+                          {"name": "goalSetPiece" },
+                          {"name": "goalOwn" },
+                          {"name": "goalNormal" },
+                          {"name": "penaltyScored" }
+                        ]},
+                        {"name": "bodyParts",
+                         "children": [
+                          {"name": "goalHead" },
+                          {"name": "goalLeftFoot" },
+                          {"name": "goalRightFoot" },
+                          {"name": "goalTotal" },
+                          // "Other"
+                        ]}
+                      ]},
+                      {"name": "dribbles",
+                       "children": [
+                        {"name": "dribbleLost" },
+                        {"name": "dribbleWon" },
+                        // "DribbleTotal"
+                      ]},
+                      {"name": "possession-loss",
+                       "children": [
+                        {"name": "turnover" },
+                        {"name": "dispossessed" }
+                      ]},
+                      {"name": "aerial",
+                       "children": [
+                        {"name":"duelAerialLost" },
+                        {"name": "duelAerialWon" },
+                        // "Total"
+                      ]},
+                    ]},
+                    {"name": "Passing",
+                     "children": [
+                                  {"name": "passes",
+                                   "children": [
+                                    {"name": "length",
+                                     "children": [
+                                        // "Total",
+                                        {"name": "passLongBallAccurate" },
+                                        {"name": "passLongBallInaccurate" },
+                                        {"name": "shortPassAccurate" },
+                                        {"name": "shortPassInaccurate" }
+                                      ]},
+                                    { "name": "type",
+                                     "children": [
+                                      {"name": "passCornerAccurate" },
+                                      {"name": "passCornerInaccurate" },
+                                      {"name": "passCrossAccurate" },
+                                      {"name": "passCrossInaccurate" },
+                                      {"name": "passFreekickAccurate" },
+                                      {"name": "passFreekickInaccurate" }
+                                    ]}
+                                  ]},
+                                  {"name": "key-passes",
+                                   "children": [
+                                    {"name": "length",
+                                     "children": [
+                                      {"name": "keyPassLong" },
+                                      {"name": "keyPassShort" },
+                                      // "Total"
+                                    ]},
+                                    {"name": "type",
+                                     "children": [
+                                      {"name": "keyPassCorner" },
+                                      {"name": "keyPassCross" },
+                                      {"name": "keyPassOther" },
+                                      {"name": "keyPassFreekick" },
+                                      {"name": "keyPassThroughball" },
+                                      {"name": "keyPassThrowin" }
+                                    ]}
+                                  ]},
+                                  {"name": "assists",
+                                   "children": [
+                                    {"name": "assistCorner" },
+                                    {"name": "assistCross" },
+                                    {"name": "assistFreekick" },
+                                    {"name": "assistOther" },
+                                    {"name": "assistThroughball" },
+                                    {"name": "assistThrowin" },
+                                    // "Total"
+                                  ]}
+                                ]
+                      }
+                    ]
+                  }

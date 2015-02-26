@@ -14,7 +14,7 @@ var Player = require('./player.model');
 
 // Get list of things
 exports.index = function(req, res) {
-  var players = Player.find({}).limit(20).sort({minsPlayed: -1})
+  var players = Player.find({}).limit(20).sort({rating: -1})
   // var max_array =
   //          [
   //           'age',

@@ -4,7 +4,7 @@ angular.module('soccerApp')
   .config(function ($stateProvider) {
     $stateProvider
       .state('playersIndex', {
-        url: '/players',
+        url: '/',
         templateUrl: 'app/players/index.html',
         controller: 'playersIndexCtrl',
         resolve: {

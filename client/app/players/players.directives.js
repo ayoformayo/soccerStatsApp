@@ -138,9 +138,9 @@ angular.module('soccerApp')
           var attrData = attrGroup.selectAll('g').data(attr_array);
           var attrGroupEnter = attrData.enter().append('g');
           var attrText = attrGroupEnter.append('text');
-          attrText.text(function(d, i){return d.axis});
-          attrText.attr('x', 100);
-          attrText.attr('y', function(d, i){return i * 10 + 20});
+          // attrText.text(function(d, i){return d.axis});
+          // attrText.attr('x', 100);
+          // attrText.attr('y', function(d, i){return i * 10 + 20});
 
           var activeAttrs = [];
           attrGroupEnter.on('click', function(d, i){
@@ -151,32 +151,27 @@ angular.module('soccerApp')
             data[0].axes = activeAttrs;
             RadarChart.draw('.radarSvg', data);
           });
-
-          var playerArray = [];
-          var playerGroup = svg.append('g').attr('id', 'playerAttrs');
-          var playerData = playerGroup.selectAll('g').data(players.players);
-          var playerDataEnter = playerData.enter().append('g');
-          var playerText = playerDataEnter.append('text');
-          playerText.text(function(d, i){
-            return d.name;
-          });
-
-          playerText.attr('x', 300);
-          playerText.attr('y', function(d, i){return i * 10 + 20});
-          playerText.on('click', function(d, i){
-            var hasherized = that.hasherizePlayer(d);
-            data.push({axes: hasherized });
-            svg.append('g').classed('single', 1).datum(data).call(chart);
-          });
-
-
         }
       },
 
       link: function(scope, elem, attrs, ctrl){
-
+        console.log(scope.player)
         ctrl.drawSvgStyle(attrs)
 
       }
     };
+  }).directive('toggleButton', function(){
+    return {
+      restrict: "AE",
+      link: function(scope, elem, attrs){
+        scope.active = false;
+        elem.on('click', function(){
+          if(elem.hasClass('active')){
+            elem.removeClass('active');
+          }else{
+            elem.addClass('active');
+          }
+        });
+      }
+    }
   });
