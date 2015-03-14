@@ -3,20 +3,6 @@ angular.module("soccerApp")
   .controller("playersIndexCtrl", function ($scope, $http, socket, players, playersPromise, $window) {
     var ctrl = this;
     var d3 = $window.d3;
-    var width = 500,
-        height = 700,
-        radius = Math.min(width, height) / 2,
-        color = d3.scale.category20c();
-    var x = d3.scale.linear()
-        .range([0, 2 * Math.PI]);
-
-    var y = d3.scale.linear()
-        .range([0, radius]);
-
-    var svg = d3.select('.svg-container').append('svg')
-      .attr('width', width)
-      .attr('height', height)
-      .append('g').attr("transform", "translate(" + width / 2 + "," + (height / 2 + 10) + ")");
     var playerArray = players.players;
 
     var dictionary = {
@@ -104,206 +90,206 @@ angular.module("soccerApp")
       "assistThrowin":  {"name":"Serey Die","val":0}
     }
 
-    var max_hash = $scope.max_hash = {
-      "name": "Stats",
+    var max_hash = $scope.max_hash = [{
+      "name": "Stats", "displayValue": "Stats",
       "children": [{
-                    "name": "Summary",
+                    "name": "Summary", "displayValue": "Summary",
                      "children" :[ 
-                      {"name": "age" },
-                      {"name": "apps" },
-                      {"name": "height" },
-                      {"name": "minsPlayed" },
-                      {"name": "rating" },
-                      {"name": "subOn" },
-                      {"name": "weight"}
+                      {"name": "age", "displayValue": "age" },
+                      {"name": "apps", "displayValue": "apps" },
+                      {"name": "height", "displayValue": "height" },
+                      {"name": "minsPlayed", "displayValue": "minsPlayed" },
+                      {"name": "rating", "displayValue": "rating" },
+                      {"name": "subOn", "displayValue": "subOn" },
+                      {"name": "weight", "displayValue": "weight",}
                     ]},
-                    {"name": "Defensive",
+                    {"name": "Defensive", "displayValue": "Summary",
                       "children": [
-                      {"name": "tackles",
+                      {"name": "tackles", "displayValue": "Tackles",
                        "children": [
-                        {"name": "tackleTotalAttempted" },
-                        {"name": "tackleWonTotal" },
-                        {"name": "DribbledPast" }
+                        {"name": "tackleTotalAttempted", "displayValue": "Total" },
+                        {"name": "tackleWonTotal", "displayValue": "Total Won" },
+                        {"name": "DribbledPast", "displayValue": "Dribbled Past" }
                         ]
                       },
-                      {"name": "interceptions",
+                      {"name": "interceptions", "displayValue": "Interceptions",
                        "children": [
-                        {"name": "interceptionAll" },
+                        {"name": "interceptionAll", "displayValue": "All" },
                         ]
                       },
-                      { "name": "fouls",
+                      { "name": "fouls", "displayValue": "Fouls",
                       "children": [
-                       {"name": "foulCommitted" },
-                       {"name": "foulGiven" },
+                       {"name": "foulCommitted", "displayValue": "Committed" },
+                       {"name": "foulGiven", "displayValue": "Given" },
                        ]
                       },
-                      {"name": "cards",
+                      {"name": "cards", "displayValue": "Cards",
                        "children": [
-                        {"name": "redCard" },
-                        {"name": "yellowCard" }
+                        {"name": "redCard", "displayValue": "Red" },
+                        {"name": "yellowCard", "displayValue": "Yellow" }
                         ]
                       },
-                       { "name": "offsides",
+                       { "name": "offsides", "displayValue": "Offside",
                         "children": [
-                         {"name": "offsideGiven" },
+                         {"name": "offsideGiven", "displayValue": "Offside" },
                          ]
                        },
-                       { "name": "clearances",
+                       { "name": "clearances", "displayValue": "clearances",
                         "children": [
-                         {"name": "clearanceTotal" },
+                         {"name": "clearanceTotal", "displayValue": "Total Clearances" },
                         ]
                       },
-                      { "name": "blocks",
+                      { "name": "blocks", "displayValue": "blocks",
                        "children": [
-                        {"name": "ShotsBlocked" },
-                        {"name": "outfielderBlockedPass" },
-                        {"name": "passCrossBlockedDefensive" }
+                        {"name": "ShotsBlocked", "displayValue": "Shots" },
+                        {"name": "outfielderBlockedPass", "displayValue": "Pass" },
+                        {"name": "passCrossBlockedDefensive", "displayValue": "Cross" }
                         ]
                       },
-                      {"name": "saves",
+                      {"name": "saves", "displayValue": "saves",
                        "children": [
-                        {"name": "saveObox" },
-                        {"name": "savePenaltyArea" },
-                        {"name": "saveSixYardBox" },
+                        {"name": "saveObox", "displayValue": "Obox" },
+                        {"name": "savePenaltyArea", "displayValue": "PenaltyArea" },
+                        {"name": "saveSixYardBox", "displayValue": "SixYardBox" },
                         // "Total"
                         ]
                       },
                     ]},
-                    {"name": "Offensive",
+                    {"name": "Offensive", "displayValue": "Offensive",
                      "children": [
-                      {"name": "shots",
-                       "children": [                      
-                        {"name": "zones",
+                      {"name": "shots", "displayValue": "Shots",
+                       "children": [
+                        {"name": "zones", "displayValue": "Zones",
                          "children": [
-                          {"name": "shotsTotal" },
-                          {"name": "shotOboxTotal" },
-                          {"name": "shotSixYardBox" },
-                          {"name": "shotPenaltyArea" }
+                          {"name": "shotsTotal", "displayValue": "Total" },
+                          {"name": "shotOboxTotal", "displayValue": "Out of the Box" },
+                          {"name": "shotSixYardBox", "displayValue": "Six Yard Box" },
+                          {"name": "shotPenaltyArea", "displayValue": "Penalty Area" }
                         ]},
-                        {"name": "situations",
+                        {"name": "situations", "displayValue": "Situations",
                          "children": [
-                          {"name": "shotsTotal" },
-                          {"name": "shotOpenPlay" },
-                          {"name": "shotCounter" },
-                          {"name": "shotSetPiece" },
-                          {"name": "penaltyTaken" }
+                          {"name": "shotsTotal", "displayValue": "Total" },
+                          {"name": "shotOpenPlay", "displayValue": "Open Play" },
+                          {"name": "shotCounter", "displayValue": "Counter Attack" },
+                          {"name": "shotSetPiece", "displayValue": "Set Piece" },
+                          {"name": "penaltyTaken", "displayValue": "Penalty" }
                         ]},
-                        {"name": "accuracy",
+                        {"name": "accuracy", "displayValue": "Accuracy",
                          "children": [
                           // "Total",
-                          {"name": "shotOffTarget" },
-                          {"name": "shotOnPost" },
-                          {"name": "shotOnTarget" },
-                          {"name": "shotBlocked" },
+                          {"name": "shotOffTarget", "displayValue": "Off Target" },
+                          {"name": "shotOnPost", "displayValue": "On Post" },
+                          {"name": "shotOnTarget", "displayValue": "On Target" },
+                          {"name": "shotBlocked", "displayValue": "Blocked" },
                         ]},
-                        {"name": "body parts",
+                        {"name": "body parts", "displayValue": "Body Parts",
                          "children": [
-                          {"name": "shotHead" },
-                          {"name": "shotLeftFoot" },
-                          {"name": "shotRightFoot" },
-                          {"name": "shotsTotal" },
+                          {"name": "shotHead", "displayValue": "Header" },
+                          {"name": "shotLeftFoot", "displayValue": "Left Foot" },
+                          {"name": "shotRightFoot", "displayValue": "Right Foot" },
+                          {"name": "shotsTotal", "displayValue": "Total" },
                           // "Other"
                         ]}
                       ]},
-                      {"name": "goals",
+                      {"name": "goals", "displayValue": "Goals",
                        "children": [
-                        {"name": "zones",
+                        {"name": "zones", "displayValue": "Zones",
                          "children": [
-                          {"name": "goalSixYardBox" },
-                          {"name": "goalTotal" },
-                          {"name": "goalPenaltyArea" },
-                          {"name": "goalObox" },
+                          {"name": "goalSixYardBox", "displayValue": "Six Yard Box" },
+                          {"name": "goalTotal", "displayValue": "Total" },
+                          {"name": "goalPenaltyArea", "displayValue": "Penalty Area" },
+                          {"name": "goalObox", "displayValue": "Out of Box" },
                         ]},
-                        {"name": "situations",
+                        {"name": "situations", "displayValue": "Situations",
                          "children": [
-                          {"name": "goalOpenPlay" },
-                          {"name": "goalCounter" },
-                          {"name": "goalSetPiece" },
-                          {"name": "goalOwn" },
-                          {"name": "goalNormal" },
-                          {"name": "penaltyScored" }
+                          {"name": "goalOpenPlay", "displayValue": "Open Play" },
+                          {"name": "goalCounter", "displayValue": "Counter" },
+                          {"name": "goalSetPiece", "displayValue": "Set Piece" },
+                          {"name": "goalOwn", "displayValue": "OwnGoal" },
+                          {"name": "goalNormal", "displayValue": "Normal" },
+                          {"name": "penaltyScored", "displayValue": "Penalty" }
                         ]},
-                        {"name": "bodyParts",
+                        {"name": "bodyParts", "displayValue": "Body Parts",
                          "children": [
-                          {"name": "goalHead" },
-                          {"name": "goalLeftFoot" },
-                          {"name": "goalRightFoot" },
-                          {"name": "goalTotal" },
+                          {"name": "goalHead", "displayValue": "Head" },
+                          {"name": "goalLeftFoot", "displayValue": "Left Foot" },
+                          {"name": "goalRightFoot", "displayValue": "Right Foot" },
+                          {"name": "goalTotal", "displayValue": "Total" },
                           // "Other"
                         ]}
                       ]},
-                      {"name": "dribbles",
+                      {"name": "dribbles", "displayValue": "Dribbles",
                        "children": [
-                        {"name": "dribbleLost" },
-                        {"name": "dribbleWon" },
+                        {"name": "dribbleLost", "displayValue": "Lost" },
+                        {"name": "dribbleWon", "displayValue": "Won" },
                         // "DribbleTotal"
                       ]},
-                      {"name": "possession-loss",
+                      {"name": "possession-loss", "displayValue": "Possession Loss",
                        "children": [
-                        {"name": "turnover" },
-                        {"name": "dispossessed" }
+                        {"name": "turnover", "displayValue": "turnover" },
+                        {"name": "dispossessed", "displayValue": "dispossessed" }
                       ]},
-                      {"name": "aerial",
+                      {"name": "aerial", "displayValue": "Aerial",
                        "children": [
-                        {"name":"duelAerialLost" },
-                        {"name": "duelAerialWon" },
+                        {"name":"duelAerialLost", "displayValue": "Lost" },
+                        {"name": "duelAerialWon", "displayValue": "Won" },
                         // "Total"
                       ]},
                     ]},
-                    {"name": "Passing",
+                    {"name": "Passing", "displayValue": "Passing",
                      "children": [
-                                  {"name": "passes",
+                                  {"name": "passes", "displayValue": "Passes",
                                    "children": [
-                                    {"name": "length",
+                                    {"name": "length", "displayValue": "Length",
                                      "children": [
                                         // "Total",
-                                        {"name": "passLongBallAccurate" },
-                                        {"name": "passLongBallInaccurate" },
-                                        {"name": "shortPassAccurate" },
-                                        {"name": "shortPassInaccurate" }
+                                        {"name": "passLongBallAccurate", "displayValue": "AccurateLongBall" },
+                                        {"name": "passLongBallInaccurate", "displayValue": "InaccurateLongBall" },
+                                        {"name": "shortPassAccurate", "displayValue": "AccurateShortPass" },
+                                        {"name": "shortPassInaccurate", "displayValue": "InccurateShortPass" }
                                       ]},
-                                    { "name": "type",
+                                    { "name": "type", "displayValue": "React.PropTypes.number",
                                      "children": [
-                                      {"name": "passCornerAccurate" },
-                                      {"name": "passCornerInaccurate" },
-                                      {"name": "passCrossAccurate" },
-                                      {"name": "passCrossInaccurate" },
-                                      {"name": "passFreekickAccurate" },
-                                      {"name": "passFreekickInaccurate" }
+                                      {"name": "passCornerAccurate", "displayValue": "CornerAccurate" },
+                                      {"name": "passCornerInaccurate", "displayValue": "CornerInaccurate" },
+                                      {"name": "passCrossAccurate", "displayValue": "CrossAccurate" },
+                                      {"name": "passCrossInaccurate", "displayValue": "CrossInaccurate" },
+                                      {"name": "passFreekickAccurate", "displayValue": "FreekickAccurate" },
+                                      {"name": "passFreekickInaccurate", "displayValue": "FreekickInaccurate" }
                                     ]}
                                   ]},
-                                  {"name": "key-passes",
+                                  {"name": "key-passes", "displayValue": "Key Passes",
                                    "children": [
-                                    {"name": "length",
+                                    {"name": "length", "displayValue": "Length",
                                      "children": [
-                                      {"name": "keyPassLong" },
-                                      {"name": "keyPassShort" },
+                                      {"name": "keyPassLong", "displayValue": "Long" },
+                                      {"name": "keyPassShort", "displayValue": "Short" },
                                       // "Total"
                                     ]},
-                                    {"name": "type",
+                                    {"name": "type", "displayValue": "Type",
                                      "children": [
-                                      {"name": "keyPassCorner" },
-                                      {"name": "keyPassCross" },
-                                      {"name": "keyPassOther" },
-                                      {"name": "keyPassFreekick" },
-                                      {"name": "keyPassThroughball" },
-                                      {"name": "keyPassThrowin" }
+                                      {"name": "keyPassCorner", "displayValue": "keyPass" },
+                                      {"name": "keyPassCross", "displayValue": "keyPass" },
+                                      {"name": "keyPassOther", "displayValue": "keyPass" },
+                                      {"name": "keyPassFreekick", "displayValue": "keyPass" },
+                                      {"name": "keyPassThroughball", "displayValue": "keyPass" },
+                                      {"name": "keyPassThrowin", "displayValue": "keyPass" }
                                     ]}
                                   ]},
-                                  {"name": "assists",
+                                  {"name": "assists", "displayValue": "Assists",
                                    "children": [
-                                    {"name": "assistCorner" },
-                                    {"name": "assistCross" },
-                                    {"name": "assistFreekick" },
-                                    {"name": "assistOther" },
-                                    {"name": "assistThroughball" },
-                                    {"name": "assistThrowin" },
+                                    {"name": "assistCorner", "displayValue": "Corner" },
+                                    {"name": "assistCross", "displayValue": "Cross" },
+                                    {"name": "assistFreekick", "displayValue": "Freekick" },
+                                    {"name": "assistOther", "displayValue": "Other" },
+                                    {"name": "assistThroughball", "displayValue": "Throughball" },
+                                    {"name": "assistThrowin", "displayValue": "Throwin" },
                                     // "Total"
                                   ]}
                                 ]
                       }
                     ]
-                  };
+                  }];
    
 
     var stash = function(d) {
@@ -312,58 +298,148 @@ angular.module("soccerApp")
     }
 
 
-  // Interpolate the arcs in data space.
+  var width = 840,
+      height = width,
+      radius = width / 2,
+      x = d3.scale.linear().range([0, 2 * Math.PI]),
+      y = d3.scale.pow().exponent(1.3).domain([0, 1]).range([0, radius]),
+      padding = 5,
+      duration = 1000;
 
+  var div = d3.select(".svg-container");
 
-    var partition = d3.layout.partition()
+  div.select("img").remove();
+
+  var vis = div.append("svg")
+      .attr("width", width + padding * 2)
+      .attr("height", height + padding * 2)
+    .append("g")
+      .attr("transform", "translate(" + [radius + padding, radius + padding] + ")");
+
+  div.append("p")
+      .attr("id", "intro")
+      .text("Click to zoom!");
+
+  var partition = d3.layout.partition()
       .sort(null)
-      .size([2 * Math.PI, radius * radius])
-      .value(function(d) { return 1; });
+      .value(function(d) { return 5.8 - d.depth; });
 
 
-    var arc = d3.svg.arc()
-      .startAngle(function(d) { return d.x; })
-      .endAngle(function(d) { return d.x + d.dx; })
-      .innerRadius(function(d) { 
-        return Math.sqrt(d.y); 
-      })
-      .outerRadius(function(d) { 
-        return Math.sqrt(d.y + d.dy); 
-      });
+  var arc = d3.svg.arc()
+      .startAngle(function(d) { return Math.max(0, Math.min(2 * Math.PI, x(d.x))); })
+      .endAngle(function(d) { return Math.max(0, Math.min(2 * Math.PI, x(d.x + d.dx))); })
+      .innerRadius(function(d) { return Math.max(0, d.y ? y(d.y) : d.y); })
+      .outerRadius(function(d) { return Math.max(0, y(d.y + d.dy)); });
 
-    var path = svg.datum(max_hash).selectAll("path")
-          .data(partition.nodes)
+    var nodes = partition.nodes({children: max_hash});
 
-     var pathEnter = path.enter().append("path")
-          .attr("display", function(d) { return d.depth ? null : "none"; }) // hide inner ring
-          .attr("d", arc)
-          .style("stroke", "#fff")
-          .style("fill", function(d) { return color((d.children ? d : d.parent).name); })
-          .style("fill-rule", "evenodd")
-          .each(stash);
-    path.on('click', function(d){
-      console.log(d)
-    })
+    var path = vis.selectAll("path").data(nodes);
+    path.enter().append("path")
+        .attr("id", function(d, i) { return "path-" + i; })
+        .attr("d", arc)
+        .attr("fill-rule", "evenodd")
+        .style("fill", colour)
+        .on("click", click);
 
-    var text = svg.selectAll("text").datum(max_hash).data(partition.nodes);
-
+    var text = vis.selectAll("text").data(nodes);
     var textEnter = text.enter().append("text")
         .style("fill-opacity", 1)
         .style("fill", function(d) {
-          return "#eee";
+          return brightness(d3.rgb(colour(d))) < 125 ? "#eee" : "#000";
         })
         .attr("text-anchor", function(d) {
-          return 'end';
+          return x(d.x + d.dx / 2) > Math.PI ? "end" : "start";
         })
         .attr("dy", ".2em")
-
-
-    d3.select(self.frameElement).style("height", height + "px");
+        .attr("transform", function(d) {
+          var multiline = (d.displayValue || "").split(" ").length > 1,
+              angle = x(d.x + d.dx / 2) * 180 / Math.PI - 90,
+              rotate = angle + (multiline ? -.5 : 0);
+          return "rotate(" + rotate + ")translate(" + (y(d.y) + padding) + ")rotate(" + (angle > 90 ? -180 : 0) + ")";
+        })
+        .on("click", click);
 
     textEnter.append("tspan")
         .attr("x", 0)
-        .text(function(d) { return d.name});
+        .text(function(d) { 
+          console.log(d)
+          return d.depth ? d.displayValue.split(" ")[0] : ""; });
+    textEnter.append("tspan")
+        .attr("x", 0)
+        .attr("dy", "1em")
+        .text(function(d) { return d.depth ? d.displayValue.split(" ")[1] || "" : ""; });
 
+    function click(d) {
+      path.transition()
+        .duration(duration)
+        .attrTween("d", arcTween(d));
+
+      // Somewhat of a hack as we rely on arcTween updating the scales.
+      text.style("visibility", function(e) {
+            return isParentOf(d, e) ? null : d3.select(this).style("visibility");
+          })
+        .transition()
+          .duration(duration)
+          .attrTween("text-anchor", function(d) {
+            return function() {
+              return x(d.x + d.dx / 2) > Math.PI ? "end" : "start";
+            };
+          })
+          .attrTween("transform", function(d) {
+            var multiline = (d.displayValue || "").split(" ").length > 1;
+            return function() {
+              var angle = x(d.x + d.dx / 2) * 180 / Math.PI - 90,
+                  rotate = angle + (multiline ? -.5 : 0);
+              return "rotate(" + rotate + ")translate(" + (y(d.y) + padding) + ")rotate(" + (angle > 90 ? -180 : 0) + ")";
+            };
+          })
+          .style("fill-opacity", function(e) { return isParentOf(d, e) ? 1 : 1e-6; })
+          .each("end", function(e) {
+            d3.select(this).style("visibility", isParentOf(d, e) ? null : "hidden");
+          });
+    }
+
+  function isParentOf(p, c) {
+    if (p === c) return true;
+    if (p.children) {
+      return p.children.some(function(d) {
+        return isParentOf(d, c);
+      });
+    }
+    return false;
+  }
+
+  function colour(d) {
+    if (d.children) {
+      // There is a maximum of two children!
+      var colours = d.children.map(colour),
+          a = d3.hsl(colours[0]),
+          b = d3.hsl(colours[1]);
+      // L*a*b* might be better here...
+      return d3.hsl((a.h + b.h) / 2, a.s * 1.2, a.l / 1.2);
+    }
+    return d.colour || "#fff";
+  }
+
+  // Interpolate the scales!
+  function arcTween(d) {
+    var my = maxY(d),
+        xd = d3.interpolate(x.domain(), [d.x, d.x + d.dx]),
+        yd = d3.interpolate(y.domain(), [d.y, my]),
+        yr = d3.interpolate(y.range(), [d.y ? 20 : 0, radius]);
+    return function(d) {
+      return function(t) { x.domain(xd(t)); y.domain(yd(t)).range(yr(t)); return arc(d); };
+    };
+  }
+
+  function maxY(d) {
+    return d.children ? Math.max.apply(Math, d.children.map(maxY)) : d.y + d.dy;
+  }
+
+  // http://www.w3.org/WAI/ER/WD-AERT/#color-contrast
+  function brightness(rgb) {
+    return rgb.r * .299 + rgb.g * .587 + rgb.b * .114;
+  }
 
     $scope.$on("$destroy", function () {
       socket.unsyncUpdates("thing");
