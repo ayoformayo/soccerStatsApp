@@ -92,18 +92,8 @@ angular.module("soccerApp")
 
     var max_hash = $scope.max_hash = [{
       "name": "Stats", "displayValue": "Stats",
-      "children": [{
-                    "name": "Summary", "displayValue": "Summary",
-                     "children" :[ 
-                      {"name": "age", "displayValue": "age" },
-                      {"name": "apps", "displayValue": "apps" },
-                      {"name": "height", "displayValue": "height" },
-                      {"name": "minsPlayed", "displayValue": "minsPlayed" },
-                      {"name": "rating", "displayValue": "rating" },
-                      {"name": "subOn", "displayValue": "subOn" },
-                      {"name": "weight", "displayValue": "weight",}
-                    ]},
-                    {"name": "Defensive", "displayValue": "Summary",
+      "children": [
+                    {"name": "Defensive", "displayValue": "Defensive",
                       "children": [
                       {"name": "tackles", "displayValue": "Tackles",
                        "children": [
@@ -248,7 +238,7 @@ angular.module("soccerApp")
                                         {"name": "shortPassAccurate", "displayValue": "AccurateShortPass" },
                                         {"name": "shortPassInaccurate", "displayValue": "InccurateShortPass" }
                                       ]},
-                                    { "name": "type", "displayValue": "React.PropTypes.number",
+                                    { "name": "type", "displayValue": "type",
                                      "children": [
                                       {"name": "passCornerAccurate", "displayValue": "CornerAccurate" },
                                       {"name": "passCornerInaccurate", "displayValue": "CornerInaccurate" },
@@ -268,12 +258,12 @@ angular.module("soccerApp")
                                     ]},
                                     {"name": "type", "displayValue": "Type",
                                      "children": [
-                                      {"name": "keyPassCorner", "displayValue": "keyPass" },
-                                      {"name": "keyPassCross", "displayValue": "keyPass" },
-                                      {"name": "keyPassOther", "displayValue": "keyPass" },
-                                      {"name": "keyPassFreekick", "displayValue": "keyPass" },
-                                      {"name": "keyPassThroughball", "displayValue": "keyPass" },
-                                      {"name": "keyPassThrowin", "displayValue": "keyPass" }
+                                      {"name": "keyPassCorner", "displayValue": "Cornder" },
+                                      {"name": "keyPassCross", "displayValue": "Cross" },
+                                      {"name": "keyPassOther", "displayValue": "Other" },
+                                      {"name": "keyPassFreekick", "displayValue": "Freekick" },
+                                      {"name": "keyPassThroughball", "displayValue": "Throughball" },
+                                      {"name": "keyPassThrowin", "displayValue": "Throwin" }
                                     ]}
                                   ]},
                                   {"name": "assists", "displayValue": "Assists",
