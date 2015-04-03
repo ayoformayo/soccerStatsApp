@@ -90,9 +90,7 @@ angular.module("soccerApp")
       "assistThrowin":  {"name":"Serey Die","val":0}
     }
 
-    var max_hash = $scope.max_hash = [{
-      "name": "Stats", "displayValue": "Stats",
-      "children": [
+    var max_hash = $scope.max_hash = [
                     {"name": "Defensive", "displayValue": "Defensive",
                       "children": [
                       {"name": "tackles", "displayValue": "Tackles",
@@ -278,8 +276,7 @@ angular.module("soccerApp")
                                   ]}
                                 ]
                       }
-                    ]
-                  }];
+                    ];
    
 
     var stash = function(d) {
@@ -288,7 +285,7 @@ angular.module("soccerApp")
     }
 
 
-  var width = 840,
+  var width = 600,
       height = width,
       radius = width / 2,
       x = d3.scale.linear().range([0, 2 * Math.PI]),
@@ -308,7 +305,8 @@ angular.module("soccerApp")
 
   div.append("p")
       .attr("id", "intro")
-      .text("Click to zoom!");
+      .text("Click to zoom!")
+      .on('click', zoomOut) 
 
   var partition = d3.layout.partition()
       .sort(null)
@@ -327,8 +325,8 @@ angular.module("soccerApp")
     path.enter().append("path")
         .attr("id", function(d, i) { return "path-" + i; })
         .attr("d", arc)
-        .attr("fill-rule", "evenodd")
-        .style("fill", colour)
+        // .attr("fill-rule", "evenodd")
+        // .style("fill", colour)
         .on("click", click);
 
     var text = vis.selectAll("text").data(nodes);
@@ -352,42 +350,32 @@ angular.module("soccerApp")
     textEnter.append("tspan")
         .attr("x", 0)
         .text(function(d) { 
-          console.log(d)
           return d.depth ? d.displayValue.split(" ")[0] : ""; });
     textEnter.append("tspan")
         .attr("x", 0)
         .attr("dy", "1em")
         .text(function(d) { return d.depth ? d.displayValue.split(" ")[1] || "" : ""; });
 
-    function click(d) {
-      path.transition()
-        .duration(duration)
-        .attrTween("d", arcTween(d));
+  function click(d) {
+    var hasClass = d3.event.target.classList.contains('active-path');
+    path.each(function(e, i){
+      var that = d3.select(this);
+      if(isParentOf(d, e)){
+        that.classed({'active-path': !hasClass}); 
+      }
+    });
+  };
 
-      // Somewhat of a hack as we rely on arcTween updating the scales.
-      text.style("visibility", function(e) {
-            return isParentOf(d, e) ? null : d3.select(this).style("visibility");
-          })
-        .transition()
-          .duration(duration)
-          .attrTween("text-anchor", function(d) {
-            return function() {
-              return x(d.x + d.dx / 2) > Math.PI ? "end" : "start";
-            };
-          })
-          .attrTween("transform", function(d) {
-            var multiline = (d.displayValue || "").split(" ").length > 1;
-            return function() {
-              var angle = x(d.x + d.dx / 2) * 180 / Math.PI - 90,
-                  rotate = angle + (multiline ? -.5 : 0);
-              return "rotate(" + rotate + ")translate(" + (y(d.y) + padding) + ")rotate(" + (angle > 90 ? -180 : 0) + ")";
-            };
-          })
-          .style("fill-opacity", function(e) { return isParentOf(d, e) ? 1 : 1e-6; })
-          .each("end", function(e) {
-            d3.select(this).style("visibility", isParentOf(d, e) ? null : "hidden");
-          });
-    }
+
+  function zoomOut(){
+    // var hasClass = d3.event.target.classList.contains('active-path');
+    var mapped = path.filter(function(e, i){
+      return e.children === undefined;
+    });
+    mapped.each(function(e, i){
+      console.log(e)
+    })
+  };
 
   function isParentOf(p, c) {
     if (p === c) return true;

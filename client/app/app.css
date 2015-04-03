@@ -109,6 +109,10 @@ line {
   stroke-width: 1.5px;
 }
 
+.activeSection {
+  fill: black !important;
+}
+
 .string, .regexp {
   color: #f39;
 }
@@ -145,4 +149,12 @@ a:hover {
   width: 1280px;
   font-size: 12px;
   color: #999;
+}
+
+path {
+  fill-rule: evenodd;
+  fill: #aaa;
+  fill-opacity: .7;
+  stroke: #666;
+  stroke-width: 1.5px;
 }
