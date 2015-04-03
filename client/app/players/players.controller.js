@@ -285,9 +285,9 @@ angular.module("soccerApp")
     }
 
 
-  var width = 600,
+  var width = 500,
       height = width,
-      radius = width / 2,
+      radius = 250,
       x = d3.scale.linear().range([0, 2 * Math.PI]),
       y = d3.scale.pow().exponent(1.3).domain([0, 1]).range([0, radius]),
       padding = 5,
@@ -370,6 +370,9 @@ angular.module("soccerApp")
 
   function zoomOut(){
     activePaths = d3.selectAll('.active-path');
+    // path.transition()
+    // .duration(duration)
+    // .attrTween("d", arcTween(d));
   };
 
   function isParentOf(p, c) {
