@@ -366,15 +366,10 @@ angular.module("soccerApp")
     });
   };
 
+  var activePaths;
 
   function zoomOut(){
-    // var hasClass = d3.event.target.classList.contains('active-path');
-    var mapped = path.filter(function(e, i){
-      return e.children === undefined;
-    });
-    mapped.each(function(e, i){
-      console.log(e)
-    })
+    activePaths = d3.selectAll('.active-path');
   };
 
   function isParentOf(p, c) {
