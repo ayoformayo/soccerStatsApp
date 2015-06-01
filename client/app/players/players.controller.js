@@ -1,10 +1,7 @@
 "use strict";
 angular.module("soccerApp")
   .controller("playersIndexCtrl", function ($scope, $http, socket, players, playersPromise, $window) {
-    var ctrl = this;
-    var d3 = $window.d3;
-    var playerArray = players.players;
-
+    var d3 = window.d3;
     var dictionary = {
       // IS THIS DATA CORRECT??
       "age":  {"name":"Faryd Mondragón","val":43},
@@ -284,6 +281,13 @@ angular.module("soccerApp")
       d.dx0 = d.dx;
     }
 
+  var playerArray = players.players;
+    var yScale = d3.scale.linear ()
+        .domain([0, playerArray.length])
+        .range([0, height]);
+
+  // .append('g').attr("transform", "translate(" + width / 2 + "," + (height / 2 + 10) + ")");
+
 
   var width = 500,
       height = width,
@@ -415,6 +419,7 @@ angular.module("soccerApp")
     return false;
   }
 
+
   function colour(d) {
     if (d.children) {
       // There is a maximum of two children!
@@ -446,6 +451,116 @@ angular.module("soccerApp")
   function brightness(rgb) {
     return rgb.r * .299 + rgb.g * .587 + rgb.b * .114;
   }
+
+  //   var ctrl = this;
+  // var width = 1000,
+  //     height = 1000,
+  //     radius = Math.min(width, height) / 2,
+  //     color = d3.scale.category20c();
+  // var x = d3.scale.linear()
+  //     .range([0, 2 * Math.PI]);
+
+  // var y = d3.scale.linear()
+  //     .range([0, radius]);
+  //     var playerEnter = svg.selectAll('rect')
+  //       .data(players.players)
+  //       .enter();
+
+  //     var playerBars = playerEnter.append('text');
+
+  //     this.calcCoordinates = function(d, angle){
+  //       var record = dictionary[d.attribute].val
+  //       var current = d.val
+  //       var percent = (current / record);
+  //       if(record === 0 ){ percent =  1};
+  //       return _this.mathShit(angle, percent)
+  //     }
+
+  //     this.mathShit = function(angle, percent){
+  //       var rad = angle * Math.PI / 180;
+  //       var r = percent * 250;
+  //       var x = r * Math.cos(rad) + 500
+  //       var y = r * Math.sin(rad) + 500
+  //       return{ x: x, y: y }
+  //     }
+
+  //   var _this = this;
+  //   playerBars.on('click', function(e){
+  //     var hash_array = [];
+  //     for(var k in e){
+  //       if(typeof e[k] === 'number' && dictionary[k]){
+  //         var hash = {};
+  //         hash.val = e[k];
+  //         hash.attribute = k;
+  //         hash_array.push(hash)
+  //       }
+  //     }
+
+  //     var rotateScale = d3.scale.linear ()
+  //         .domain([0, hash_array.length])
+  //         .range([0, 360]);
+
+  //     var groupEnter = svg.selectAll('.circle')
+  //     .data(hash_array)
+  //     .enter()
+  //     .append('g')
+
+  //     var coordinates = [];
+  //     var percents = [.25, .5, .75, 1];
+
+  //     var furthest = []
+  //     _.each(percents, function(percent, i){
+  //       var percentCoords = [];
+  //       _.each(hash_array, function(hash, it){
+  //         percentCoords.push(_this.mathShit(rotateScale(it), percent));
+  //       });
+  //       furthest.push(percentCoords)
+  //     })
+
+  //     _this.createOutlines(furthest);
+
+  //     groupEnter.append('circle')
+  //     .attr('cx', function(d, i){
+  //       var coord = _this.calcCoordinates(d, rotateScale(i));
+  //       var furtherCoord = _this.calcCoordinates(d, rotateScale(i));
+  //       coordinates.push(coord)
+  //       return coord.x;
+  //     })
+  //     .attr('cy', function(d, i){
+  //       var coord = _this.calcCoordinates(d, rotateScale(i));
+  //       return coord.y;
+  //     })
+  //     .attr('stroke', function(d, i){return 'rgb(255,0,0)' })
+  //     .attr('stroke-width', function(d, i){return 1})
+  //     .attr('r', function(d, i){ return 3});
+
+  //     var polygon = svg.append('path');
+  //     polygon.attr('d', function(){
+  //       var string = ''
+  //       var first;
+  //       _.each(coordinates, function(coord, i){
+  //         if(i === 0 ){
+  //           string = string+ 'M ' + coord.x + ' ' +coord.y
+  //           first = ' L ' + coord.x + ' ' +coord.y
+  //         }
+  //         else{
+  //           string = string+ 'L ' + coord.x + ' ' +coord.y
+  //         }
+  //       });
+  //       string = string + first;
+  //       return string
+  //     })
+  //     .attr('fill', function(){ return 'red'})
+  //     .attr('stroke-width', function(){ return 2})
+  //     .attr('stroke', function(){ return 'blue'});
+
+  //   });
+
+  //   playerBars.text(function(d, i){ 
+  //       return d.name })
+  //     .attr('x', function(d, i){return 0})
+  //     .attr('y', function(d, i){return yScale(i)});
+
 
     $scope.$on("$destroy", function () {
       socket.unsyncUpdates("thing");
