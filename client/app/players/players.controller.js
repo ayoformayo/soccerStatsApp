@@ -306,7 +306,7 @@ angular.module("soccerApp")
   div.append("p")
       .attr("id", "intro")
       .text("Click to zoom!")
-      .on('click', zoomOut) 
+      .on('click', toggleZoom) 
 
   var partition = d3.layout.partition()
       .sort(null)
@@ -318,7 +318,12 @@ angular.module("soccerApp")
       .endAngle(function(d) { return Math.max(0, Math.min(2 * Math.PI, x(d.x + d.dx))); })
       .innerRadius(function(d) { return Math.max(0, d.y ? y(d.y) : d.y); })
       .outerRadius(function(d) { return Math.max(0, y(d.y + d.dy)); });
-
+  var miniArc = d3.svg.arc()
+      .startAngle(function(d) { return Math.max(0, Math.min(2 * Math.PI, x(d.x))); })
+      .endAngle(function(d) { return Math.max(0, Math.min(2 * Math.PI, x(d.x + d.dx))); })
+      .innerRadius(function(d) { return (Math.max(0, d.y ? y(d.y) : d.y)) /10; })
+      .outerRadius(function(d) { return (Math.max(0, y(d.y + d.dy)))/10; });
+  var toggleArc = arc;
     var nodes = partition.nodes({children: max_hash});
 
     var path = vis.selectAll("path").data(nodes);
@@ -328,6 +333,20 @@ angular.module("soccerApp")
         // .attr("fill-rule", "evenodd")
         // .style("fill", colour)
         .on("click", click);
+
+    var bigCircle = function(datum){
+      var multiline = (datum.displayValue || "").split(" ").length > 1,
+          angle = x(datum.x + datum.dx / 2) * 180 / Math.PI - 90,
+          rotate = angle + (multiline ? -.5 : 0);
+      return "rotate(" + rotate + ")translate(" + (y(datum.y) + padding) + ")rotate(" + (angle > 90 ? -180 : 0) + ")";
+    };
+
+    var littleCircle = function(datum){
+      var multiline = (datum.displayValue || "").split(" ").length > 1,
+          angle = x(datum.x + datum.dx / 2) * 180 / Math.PI - 90,
+          rotate = angle + (multiline ? -.5 : 0);
+      return "rotate(" + rotate + ")translate(" + ((y(datum.y))/10 + padding) + ")rotate(" + (angle > 90 ? -180 : 0) + ")";
+    };
 
     var text = vis.selectAll("text").data(nodes);
     var textEnter = text.enter().append("text")
@@ -340,10 +359,7 @@ angular.module("soccerApp")
         })
         .attr("dy", ".2em")
         .attr("transform", function(d) {
-          var multiline = (d.displayValue || "").split(" ").length > 1,
-              angle = x(d.x + d.dx / 2) * 180 / Math.PI - 90,
-              rotate = angle + (multiline ? -.5 : 0);
-          return "rotate(" + rotate + ")translate(" + (y(d.y) + padding) + ")rotate(" + (angle > 90 ? -180 : 0) + ")";
+          return bigCircle(d);
         })
         .on("click", click);
 
@@ -368,11 +384,25 @@ angular.module("soccerApp")
 
   var activePaths;
 
-  function zoomOut(){
+  function toggleZoom(){
     activePaths = d3.selectAll('.active-path');
-    // path.transition()
-    // .duration(duration)
-    // .attrTween("d", arcTween(d));
+    console.log("here")
+    var myDuration = 2000;
+    var toggled = toggleArc === arc ? true : false
+    toggleArc = toggled ? miniArc : arc;
+    var circleSize = toggled ? littleCircle : bigCircle;
+    var fontSize = toggled ? "1px" : "14px";
+    var opacity = toggled ? 0 : 1;
+    var position = toggled ? [width - padding, padding] : [radius + padding, radius + padding];
+
+    vis.transition().duration(myDuration).attr("transform", "translate(" + position + ")")
+
+    d3.selectAll("path").transition().duration(myDuration).attr("d", toggleArc);
+    d3.selectAll("text").transition().duration(myDuration).attr("transform", function(d) {
+        return circleSize(d)
+        })
+      .style("font-size", fontSize)
+      .style("opacity", opacity)
   };
 
   function isParentOf(p, c) {
